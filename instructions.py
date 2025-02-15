@@ -1,12 +1,12 @@
 
 r_type = {
-# instruction:  opcode  f3   f7
-        "add": [ 51,     0,   0  ], 
-        "sub": [ 51,     0,   32 ],  
-        "slt": [ 51,     2,   0  ], 
-        "srl": [ 51,     0,   0  ], 
-        "or" : [ 51,     5,   0  ], 
-        "and": [ 51,     7,   0  ], 
+# instruction:  opcode    f3   f7
+        "add" : [ 51,     0,   0  ], 
+        "sub" : [ 51,     0,   32 ],  
+        "slt" : [ 51,     2,   0  ], 
+        "srl" : [ 51,     5,   0  ], 
+        "or"  : [ 51,     6,   0  ], 
+        "and" : [ 51,     7,   0  ], 
 }
 
 i_type = {
@@ -25,8 +25,8 @@ b_type = {
 
 s_type = {
 # instruction:   opcode  f3
-    "sw": [ 35,     2 ],
-    }
+        "sw"  : [ 35,     2 ],
+}
 
 reg_conv = {
         "zero": 0,

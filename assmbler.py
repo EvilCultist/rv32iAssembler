@@ -27,8 +27,7 @@ def main():
         if ops[0] not in funcs: 
             error(f'unknown operation on line : {pc}')
         out.append(transl(ops, labels, pc))
-    print('success')
-    print(out)
+    print(*out, sep='\n')
 
 
 def error(mssg):
