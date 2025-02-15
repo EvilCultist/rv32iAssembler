@@ -23,6 +23,11 @@ b_type = {
         "blt" : [ 99,     4 ], 
 }
 
+s_type = {
+# instruction:   opcode  f3
+    "sw": [ 35,     2 ],
+    }
+
 reg_conv = {
         "zero": 0,
         "ra": 1,
@@ -45,9 +50,10 @@ for i in range(3,7):
     reg_conv['t'+str(i)] = 28 + i - 3
 
 
-funcs = list(r_type.keys()) + list(i_type.keys()) + list(b_type.keys())
+funcs = list(r_type.keys()) + list(i_type.keys()) + list(b_type.keys()) + list(s_type.keys())
 
 if __name__=='__main__':
     print(funcs)
     print('\n\n ' + 10*'-' + ' \n\n')
     print(*reg_conv, sep='\n')
+

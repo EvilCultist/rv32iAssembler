@@ -1,4 +1,4 @@
-from instructions import funcs, b_type, r_type, i_type
+from instructions import funcs, b_type, r_type, i_type, s_type
 from torv32i import transl
 
 inpPath = "input.txt"
@@ -41,3 +41,4 @@ def writeToDisk():
 
 if __name__=='__main__':
     main()
+

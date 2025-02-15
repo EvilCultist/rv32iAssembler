@@ -1,4 +1,4 @@
-from instructions import r_type, i_type, b_type, reg_conv
+from instructions import r_type, i_type, b_type, s_type, reg_conv
 
 def toBin(x, size=3):
     if x < 0:
@@ -73,6 +73,18 @@ def make_b(ops, registers, labels, pc):
         imm = toBin(labels[val]-pc, 12)
     return imm[11] + imm[9:3:-1] + rs2 + rs1 + func3 + imm[3::-1]+ imm[10] + opcode
 
+def make_s(ops, registers):
+    registers = registers.split(',')
+    opcode = toBin(ops[0], 7)
+    func3 = toBin(ops[1], 3)
+    rs2 = toBin(reg_conv[registers[0]], 5)
+    try:
+        rs1 = toBin(reg_conv[registers[1]], 5)
+    except:
+        imm = getImmediate(registers[1])
+        rs1 = getRegVal(registers[1])
+    return imm[:7] + rs2 + rs1 + func3 + imm[7:] + opcode
+
 def transl(ins, labels, pc):
     cmd = ins[0]
     if cmd in r_type:
@@ -81,8 +93,9 @@ def transl(ins, labels, pc):
         return make_i(i_type[cmd], ins[1])
     if cmd in b_type:
         return make_b(b_type[cmd], ins[1], labels, pc)
-
-
+    if cmd in s_type:
+        return make_s(s_type[cmd], ins[1])
+    
 if __name__=='__main__':
     #           tests
     print(f"binary of 421: {toBin(421)}")
@@ -91,3 +104,5 @@ if __name__=='__main__':
     print(transl(['lw', 't0,gp,32'], {}, 0))
     print(transl(['bne', 'a0,a3,-8'], {}, 0))
     print(transl(['blt', 'a0,a3,start'], {'start': 0}, 8))
+    print(transl(['sw', 'ra,32(sp)'],{},0))
+
