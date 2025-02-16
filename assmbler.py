@@ -1,4 +1,4 @@
-from instructions import funcs, b_type, r_type, i_type, s_type
+from instructions import funcs, b_type, r_type, i_type, s_type, j_type
 from torv32i import transl
 
 inpPath = "input.txt"

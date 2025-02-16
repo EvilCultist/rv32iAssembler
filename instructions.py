@@ -28,6 +28,11 @@ s_type = {
         "sw"  : [ 35,     2 ],
 }
 
+j_type = {
+    # instruction: opcode 
+        "jal" : [ 111 ],
+}
+
 reg_conv = {
         "zero": 0,
         "ra": 1,
@@ -50,7 +55,7 @@ for i in range(3,7):
     reg_conv['t'+str(i)] = 28 + i - 3
 
 
-funcs = list(r_type.keys()) + list(i_type.keys()) + list(b_type.keys()) + list(s_type.keys())
+funcs = list(r_type.keys()) + list(i_type.keys()) + list(b_type.keys()) + list(s_type.keys()) + list(j_type.keys())
 
 if __name__=='__main__':
     print(funcs)

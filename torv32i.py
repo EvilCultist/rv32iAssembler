@@ -1,4 +1,4 @@
-from instructions import r_type, i_type, b_type, s_type, reg_conv
+from instructions import r_type, i_type, b_type, s_type, reg_conv, j_type
 
 def toBin(x, size=3):
     if x < 0:
@@ -85,6 +85,21 @@ def make_s(ops, registers):
         rs1 = getRegVal(registers[1])
     return imm[:7] + rs2 + rs1 + func3 + imm[7:] + opcode
 
+def make_j(ops, registers, labels, pc):
+    registers = registers.split(',')
+    opcode = toBin(ops[0],7)
+    rd = toBin(reg_conv[registers[0]],5)
+    try:
+        val = int(registers[1])
+        imm = toBin(val,21)
+    except:
+        val = registers[1]
+        if val not in labels:
+            print(val)
+            raise TypeError('label')
+        imm = toBin(labels[val]-pc,21)
+    return imm[20] + imm[10:0:-1][1:] + imm[11] + imm[19:11:-1] + rd + opcode
+
 def transl(ins, labels, pc):
     cmd = ins[0]
     if cmd in r_type:
@@ -95,6 +110,8 @@ def transl(ins, labels, pc):
         return make_b(b_type[cmd], ins[1], labels, pc)
     if cmd in s_type:
         return make_s(s_type[cmd], ins[1])
+    if cmd in j_type:
+        return make_j(j_type[cmd], ins[1], labels, pc)
     
 if __name__=='__main__':
     #           tests
