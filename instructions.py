@@ -54,6 +54,9 @@ for i in range(2,12):
 for i in range(3,7):
     reg_conv['t'+str(i)] = 28 + i - 3
 
+for i in range(32):
+    reg_conv['x'+str(i)] = i
+
 
 funcs = list(r_type.keys()) + list(i_type.keys()) + list(b_type.keys()) + list(s_type.keys()) + list(j_type.keys())
 
