@@ -75,21 +75,19 @@ def make_i(ops, registers):
 def make_b(ops, registers, labels, pc):
     global line
     registers = registers.split(',')
-    opcode = toBin(ops[0], 7) 
+    opcode = toBin(ops[0], 7)
     func3 = toBin(ops[1], 3)
     rs1 = toBin(reg_conv[registers[0]], 5)
     rs2 = toBin(reg_conv[registers[1]], 5)
     try:
-        imm = toBin(int(registers[2]), 12)
+        imm = toBin(int(registers[2]), 13)
     except:
         val = registers[2]
         if val not in labels:
             error(pc, line, f'label not found - {val} \nlabels - {labels}')
-        imm = toBin((labels[val]-pc)*4, 12)
-    outval = imm[11] + imm[9:3:-1] + rs2 + rs1 + func3 + imm[3::-1]+ imm[10] + opcode
-    # outval = imm[11] + imm[3::-1] + rs2 + rs1 + func3 + imm[9:3:-1]+ imm[10] + opcode
+        imm = toBin((labels[val]-pc)*4, 13)
+    outval = imm[12] + imm[10:4:-1] + rs2 + rs1 + func3 + imm[4:0:-1] + imm[11] + opcode
     return outval
-
 def make_s(ops, registers):
     registers = registers.split(',')
     opcode = toBin(ops[0], 7)
