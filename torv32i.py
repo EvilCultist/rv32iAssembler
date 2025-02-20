@@ -23,7 +23,7 @@ def error(pc,line, mssg):
     print(f"error at line {pc+1}:")
     print(line)
     print(mssg)
-    print('\n')
+    print('\n',Style.RESET_ALL)
     exit()
 
 def toNegBin(x, size):
@@ -84,11 +84,10 @@ def make_b(ops, registers, labels, pc):
     except:
         val = registers[2]
         if val not in labels:
-            print(f'label not found - {val}')
-            print(f'labels - {labels}')
-            raise TypeError('Using undefined label')
-        imm = toBin(labels[val]-pc, 12)
+            error(pc, line, f'label not found - {val} \nlabels - {labels}')
+        imm = toBin((labels[val]-pc)*4, 12)
     outval = imm[11] + imm[9:3:-1] + rs2 + rs1 + func3 + imm[3::-1]+ imm[10] + opcode
+    # outval = imm[11] + imm[3::-1] + rs2 + rs1 + func3 + imm[9:3:-1]+ imm[10] + opcode
     return outval
 
 def make_s(ops, registers):

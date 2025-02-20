@@ -54,7 +54,7 @@ def main():
             error(pc, line, 'virtual halt before eof')
     if out[len(out)-1] != virtual_halt:
         error(pc, line, 'last instruction is not virtual halt')
-    print(*out, sep='\n')
+    # print(*out, sep='\n')
     with open(outPath, 'w') as f:
         f.write('\n'.join(out))
 
