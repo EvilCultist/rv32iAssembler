@@ -28,9 +28,9 @@ def main():
     pc = -1
     for line in lines:
         pc+=1
-        ops = line.split()
-        if ops[0][-1]==':':
-            labels[ops[0][:-1:1]] = pc
+        ops = line.split(':')
+        if len(ops)!=1:
+            labels[ops[0]] = pc
     pc = -1
     for i, line in enumerate(lines):
         pc+=1
@@ -40,7 +40,7 @@ def main():
         # print(*ops, sep=' - ')
         if len(ops) > 3:
             error(pc, line, f'Too many arguments,\nexpected at most 3, got {len(ops)}')
-        if ops[0][-1] == ':' and ops[0][0].isalnum:
+        if (ops[0][-1] == ':' and ops[0][0].isalnum):
             if not ops[0][0].isalpha():
                 error(pc, line, f'Label doesn\'t start with a letter')
             labels[ops[0][:-1:1]] = pc
@@ -56,8 +56,8 @@ def main():
         else:
             # print(*ops, sep=' - ')
             out.append(transl(ops, labels, pc))
-        if out[-1] == virtual_halt and i!=(len(lines)-1):
-            error(pc, line, 'virtual halt before eof')
+        # if out[-1] == virtual_halt and i!=(len(lines)-1):
+        #     error(pc, line, 'virtual halt before eof')
     if out[len(out)-1] != virtual_halt:
         error(pc, line, 'last instruction is not virtual halt')
     # print(*out, sep='\n')
