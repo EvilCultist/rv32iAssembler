@@ -109,8 +109,13 @@ def make_j(ops, registers, labels, pc):
     except ValueError:
         if registers[1] not in labels:
             error(prg_counter, line, f'label not found - {registers[1]}')
-        imm = toBin(labels[registers[1]] - pc, 21)
-    return imm[20] + imm[10:0:-1] + imm[11] + imm[19:11:-1] + rd + opcode   # def make_j(ops, registers, labels, pc):
+        imm = toBin((labels[registers[1]] - pc)*4, 21)
+    imm = imm[::-1]
+    print(imm[19])
+    print(imm[9::-1]) 
+    print( imm[10])
+    print(imm[19:10:-1])
+    return imm[19] + imm[9::-1] + imm[10] + imm[19:11:-1] + rd + opcode   # def make_j(ops, registers, labels, pc):
 #     registers = registers.split(',')
 #     opcode = toBin(ops[0],7)
 #     rd = toBin(reg_conv[registers[0]],5)
