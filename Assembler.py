@@ -36,6 +36,7 @@ def main():
         pc+=1
         if line == '':
             continue
+        line = line.split(':')[-1]
         ops = line.split()
         # print(*ops, sep=' - ')
         if len(ops) > 3:
