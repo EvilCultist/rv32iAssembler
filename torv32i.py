@@ -1,14 +1,30 @@
+from colorama import Fore, Back, Style
 from instructions import r_type, i_type, b_type, s_type, reg_conv, j_type
 
+prg_counter = -1
+
 def toBin(x, size=3):
+    global prg_counter, line
     if x < 0:
         return toNegBin(x, size)
     out = ""
     while x != 0:
         out += str(x%2)
         x//=2
-    out = '0'*(size-len(out[-1::-1])) + out[-1::-1]
+    if len(out) > size:
+        error(prg_counter, line, "immediate value's length is out of bounds")
+    out = '0'*(size-len(out)) + out[-1::-1]
     return out
+
+def error(pc,line, mssg):
+    print(Fore.RED, Back.YELLOW)
+    print('\n ---- ERROR ---- ')
+    print(Style.RESET_ALL, Fore.RED)
+    print(f"error at line {pc+1}:")
+    print(line)
+    print(mssg)
+    print('\n')
+    exit()
 
 def toNegBin(x, size):
     s = toBin(-x-1, size)
@@ -57,6 +73,7 @@ def make_i(ops, registers):
     return  imm + rs1 + func3 + rd + opcode
 
 def make_b(ops, registers, labels, pc):
+    global line
     registers = registers.split(',')
     opcode = toBin(ops[0], 7) 
     func3 = toBin(ops[1], 3)
@@ -71,7 +88,8 @@ def make_b(ops, registers, labels, pc):
             print(f'labels - {labels}')
             raise TypeError('Using undefined label')
         imm = toBin(labels[val]-pc, 12)
-    return imm[11] + imm[9:3:-1] + rs2 + rs1 + func3 + imm[3::-1]+ imm[10] + opcode
+    outval = imm[11] + imm[9:3:-1] + rs2 + rs1 + func3 + imm[3::-1]+ imm[10] + opcode
+    return outval
 
 def make_s(ops, registers):
     registers = registers.split(',')
@@ -101,17 +119,23 @@ def make_j(ops, registers, labels, pc):
     return imm[20] + imm[10:0:-1][1:] + imm[11] + imm[19:11:-1] + rd + opcode
 
 def transl(ins, labels, pc):
+    global prg_counter, line
+    prg_counter = pc
+    line = " ".join(ins)
     cmd = ins[0]
-    if cmd in r_type:
-        return make_r(r_type[cmd], ins[1])
-    if cmd in i_type:
-        return make_i(i_type[cmd], ins[1])
-    if cmd in b_type:
-        return make_b(b_type[cmd], ins[1], labels, pc)
-    if cmd in s_type:
-        return make_s(s_type[cmd], ins[1])
-    if cmd in j_type:
-        return make_j(j_type[cmd], ins[1], labels, pc)
+    try:
+        if cmd in r_type:
+            return make_r(r_type[cmd], ins[1])
+        if cmd in i_type:
+            return make_i(i_type[cmd], ins[1])
+        if cmd in b_type:
+            return make_b(b_type[cmd], ins[1], labels, pc)
+        if cmd in s_type:
+            return make_s(s_type[cmd], ins[1])
+        if cmd in j_type:
+            return make_j(j_type[cmd], ins[1], labels, pc)
+    except:
+        error(pc, line, "Register not found")
     
 if __name__=='__main__':
     #           tests
