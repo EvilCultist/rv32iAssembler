@@ -26,6 +26,12 @@ def main():
 
     out = []
     pc = -1
+    for line in lines:
+        pc+=1
+        ops = line.split()
+        if ops[0][-1]==':':
+            labels[ops[0][:-1:1]] = pc
+    pc = -1
     for i, line in enumerate(lines):
         pc+=1
         if line == '':
