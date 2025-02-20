@@ -38,7 +38,7 @@ def toNegBin(x, size):
 
 def getImmediate(x):
     n = 0
-    while x[n].isdigit():
+    while x[n].isdigit() or x[n]=='-':
         n+=1
     return toBin(int(x[0:n]),12)
 
@@ -103,38 +103,60 @@ def make_s(ops, registers):
     return imm[:7] + rs2 + rs1 + func3 + imm[7:] + opcode
 
 def make_j(ops, registers, labels, pc):
-    registers = registers.split(',')
+    registers = [r.strip() for r in registers.split(',')]
     opcode = toBin(ops[0],7)
     rd = toBin(reg_conv[registers[0]],5)
     try:
-        val = int(registers[1])
-        imm = toBin(val,21)
-    except:
-        val = registers[1]
-        if val not in labels:
-            print(val)
-            raise TypeError('label')
-        imm = toBin(labels[val]-pc,21)
+        imm = toBin(int(registers[1]),21)
+    except ValueError:
+        if registers[1] not in labels:
+            error(prg_counter, line, registers[1])
+        imm = toBin(labels[registers[1]]-pc,21)
     return imm[20] + imm[10:0:-1][1:] + imm[11] + imm[19:11:-1] + rd + opcode
+
+# def make_j(ops, registers, labels, pc):
+#     registers = registers.split(',')
+#     opcode = toBin(ops[0],7)
+#     rd = toBin(reg_conv[registers[0]],5)
+#     try:
+#         val = int(registers[1])
+#         imm = toBin(val,21)
+#     except:
+#         val = registers[1]
+#         if val not in labels:
+#             print(val)
+#             raise TypeError('label')
+#         imm = toBin(labels[val]-pc,21)
+#     return imm[20] + imm[10:0:-1][1:] + imm[11] + imm[19:11:-1] + rd + opcode
 
 def transl(ins, labels, pc):
     global prg_counter, line
     prg_counter = pc
     line = " ".join(ins)
     cmd = ins[0]
-    try:
-        if cmd in r_type:
-            return make_r(r_type[cmd], ins[1])
-        if cmd in i_type:
-            return make_i(i_type[cmd], ins[1])
-        if cmd in b_type:
-            return make_b(b_type[cmd], ins[1], labels, pc)
-        if cmd in s_type:
-            return make_s(s_type[cmd], ins[1])
-        if cmd in j_type:
-            return make_j(j_type[cmd], ins[1], labels, pc)
-    except:
-        error(pc, line, "Register not found")
+    if cmd in r_type:
+        return make_r(r_type[cmd], ins[1])
+    if cmd in i_type:
+        return make_i(i_type[cmd], ins[1])
+    if cmd in b_type:
+        return make_b(b_type[cmd], ins[1], labels, pc)
+    if cmd in s_type:
+        return make_s(s_type[cmd], ins[1])
+    if cmd in j_type:
+        return make_j(j_type[cmd], ins[1], labels, pc)
+    # try:
+    #     if cmd in r_type:
+    #         return make_r(r_type[cmd], ins[1])
+    #     if cmd in i_type:
+    #         return make_i(i_type[cmd], ins[1])
+    #     if cmd in b_type:
+    #         return make_b(b_type[cmd], ins[1], labels, pc)
+    #     if cmd in s_type:
+    #         return make_s(s_type[cmd], ins[1])
+    #     if cmd in j_type:
+    #         return make_j(j_type[cmd], ins[1], labels, pc)
+    # except:
+    #     error(pc, line, "Register not found")
     
 if __name__=='__main__':
     #           tests
