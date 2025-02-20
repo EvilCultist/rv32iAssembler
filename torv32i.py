@@ -102,16 +102,15 @@ def make_s(ops, registers):
 
 def make_j(ops, registers, labels, pc):
     registers = [r.strip() for r in registers.split(',')]
-    opcode = toBin(ops[0],7)
-    rd = toBin(reg_conv[registers[0]],5)
+    opcode = toBin(ops[0], 7)
+    rd = toBin(reg_conv[registers[0]], 5)
     try:
-        imm = toBin(int(registers[1]),21)
+        imm = toBin(int(registers[1]), 21)
     except ValueError:
         if registers[1] not in labels:
-            error(prg_counter, line, registers[1])
-        imm = toBin(labels[registers[1]]-pc,21)
+            error(prg_counter, line, f'label not found - {registers[1]}')
+        imm = toBin(labels[registers[1]] - pc, 21)
     return imm[20] + imm[10:0:-1][1:] + imm[11] + imm[19:11:-1] + rd + opcode
-
 # def make_j(ops, registers, labels, pc):
 #     registers = registers.split(',')
 #     opcode = toBin(ops[0],7)
